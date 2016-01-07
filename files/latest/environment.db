@@ -1,0 +1,13 @@
+# Don't forget to export variables in *-environment.sh
+
+# all
+PG_MAJOR=9.4
+PGDATA=/var/lib/pgsql/9.4/data
+PATH=/usr/pgsql-9.4/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+LANG=en_GB.utf8
+
+# backup
+PG_BACKUP_DIRECTORY=/srv/backup/database
+PG_BACKUP_USER=postgres
+PG_BACKUP_GROUP=postgres
+PG_KEEP_FILES_YOUNGER_THAN_DAYS=30

@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup all databases
+ConditionPathIsDirectory=/srv/backup/database/
+After=postgresql.service
+
+[Service]
+EnvironmentFile=-/etc/pg/environment.db
+Type=oneshot
+ExecStart=/usr/local/bin/pg-backup-cleanup.sh
