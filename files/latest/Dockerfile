@@ -1,45 +1,46 @@
 FROM feduxorg/centos:latest
 MAINTAINER fedux.org
 
+ENV KB_VERSION 4.3.1
+
+ADD repository-elk.repo /etc/yum.repos.d/elk.repo
+ADD kibana.service /etc/systemd/system/kibana.service
+
 # Install postgres
-RUN groupadd -g 990 -r elk \
-    && useradd -r -g postgres -u 990 postgres \
-    && yum install -y postgresql${PG_MAJOR_PKG}-server postgresql${PG_MAJOR_PKG}-contrib \
-    && mv /usr/lib/systemd/system/postgresql-${PG_MAJOR}.service /etc/systemd/system/postgresql.service \
-    && sed -i -e "s/OOMScoreAdjust/# OOMScoreAdjust/" /etc/systemd/system/postgresql.service \
-    && systemctl enable postgresql \
-    && mkdir -p ${PGDATA} \
-    && mkdir -p /run/postgresql \
-    && chown -R postgres ${PGDATA} \
-    && chmod g+s /run/postgresql \
-    && chown -R postgres:postgres /run/postgresql \
+RUN groupadd -g 990 -r elasticsearch \
+    && useradd -r -g elasticsearch -u 990 elasticsearch \
+    && groupadd -g 991 -r kibana \
+    && useradd -r -g kibana -u 991 kibana \
+    && groupadd -g 992 -r logstash \
+    && useradd -r -g logstash -u 992 logstash \
+    && groupadd -g 993 -r httpd \
+    && useradd -r -g httpd -u 993 httpd \
+    && rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch \
+    && yum install -y elasticsearch logstash httpd \
+    && install -D -o kibana -g kibana -m 0755 /srv/kibana \
+    && install -D -o kibana -g kibana -m 0755 /var/log/kibana \
+    && install -D -o httpd -g httpd -m 0755 /etc/httpd/sites-enabled.d \
+    && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux-x64.tar.gz | tar -xzf - -D /srv/kibana \
+    && systemctl enable elasticsearch \
+    && systemctl enable kibana \
+    #&& mkdir -p ${PGDATA} \
+    #&& mkdir -p /run/postgresql \
+    #&& chown -R postgres ${PGDATA} \
+    #&& chmod g+s /run/postgresql \
+    #&& chown -R postgres:postgres /run/postgresql \
     && yum clean -y all
 
-# Add init service to setup database on first run
-ADD pg-init.sh /usr/local/bin/pg-init.sh
-ADD pg-init.service /etc/systemd/system/pg-init.service
+## Add cleanup backup service
+#ADD e-cleanup.service /etc/systemd/system/e-cleanup.service
+#ADD e-cleanup.timer /etc/systemd/system/e-cleanup.timer
+#ADD e-cleanup.sh /usr/local/bin/e-cleanup.sh
+#
+#RUN  chmod +x /usr/local/bin/e-cleanup.sh \
+#  && systemctl enable e-cleanup.timer
 
-RUN chmod +x /usr/local/bin/pg-init.sh \
-    && systemctl enable pg-init
+#ADD profile.d-environment.sh /etc/profile.d/99-environment.sh
+#ADD environment.db /etc/pg/environment.db
 
-# Add backup service
-ADD pg-backup.service /etc/systemd/system/pg-backup.service
-ADD pg-backup.timer /etc/systemd/system/pg-backup.timer
-ADD pg-backup.sh /usr/local/bin/pg-backup.sh
-
-RUN  chmod +x /usr/local/bin/pg-backup.sh \
-  && systemctl enable pg-backup.timer
-
-# Add cleanup backup service
-ADD pg-backup-cleanup.service /etc/systemd/system/pg-backup-cleanup.service
-ADD pg-backup-cleanup.timer /etc/systemd/system/pg-backup-cleanup.timer
-ADD pg-backup-cleanup.sh /usr/local/bin/pg-backup-cleanup.sh
-
-RUN  chmod +x /usr/local/bin/pg-backup-cleanup.sh \
-  && systemctl enable pg-backup-cleanup.timer
-
-ADD profile.d-environment.sh /etc/profile.d/99-environment.sh
-ADD environment.db /etc/pg/environment.db
-
-EXPOSE 5432
-VOLUME ["/var/lib/pgsql/${PG_MAJOR}/data", "/srv/backup"]
+#EXPOSE 5432
+EXPOSE 80 443
+#VOLUME ["/var/lib/pgsql/${PG_MAJOR}/data", "/srv/backup"]

@@ -1,0 +1,10 @@
+[Unit]
+Description=Kibana Web Frontend
+After=elasticsearch.service
+Requires=elasticsearch.service
+
+[Service]
+User=kibana
+Group=kibana
+ExecStart=/srv/kibana/bin/kibana
+WorkingDirectory=/srv/kibana
