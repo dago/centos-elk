@@ -22,6 +22,7 @@ RUN groupadd -g 990 -r elasticsearch \
 RUN install -d -o kibana -g kibana -m 0755 /srv/kibana \
     && install -d -o kibana -g kibana -m 0755 /var/log/kibana \
     && install -d -o elasticsearch -g elasticsearch -m 0700 /usr/share/elasticsearch/data \
+    && install -d -o elasticsearch -g elasticsearch -m 0755 /usr/share/elasticsearch/logs \
     && install -d -o httpd -g httpd -m 0755 /etc/httpd/sites-enabled.d \
     && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux-x64.tar.gz | tar --strip-components=1 -xzf - -C /srv/kibana \
     && chown -R kibana:kibana /srv/kibana \
