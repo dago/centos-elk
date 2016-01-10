@@ -5,6 +5,7 @@ ENV KB_VERSION 4.3.1
 
 ADD repository-elk.repo /etc/yum.repos.d/elk.repo
 ADD kibana.service /etc/systemd/system/kibana.service
+ADD http-enable.conf /etc/httpd/conf.d/enabled-sites.conf
 
 # Install postgres
 RUN groupadd -g 990 -r elasticsearch \
@@ -20,11 +21,13 @@ RUN groupadd -g 990 -r elasticsearch \
 
 RUN install -d -o kibana -g kibana -m 0755 /srv/kibana \
     && install -d -o kibana -g kibana -m 0755 /var/log/kibana \
+    && install -d -o elasticsearch -g elasticsearch -m 0700 /usr/share/elasticsearch/data \
     && install -d -o httpd -g httpd -m 0755 /etc/httpd/sites-enabled.d \
     && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux-x64.tar.gz | tar --strip-components=1 -xzf - -C /srv/kibana \
     && chown -R kibana:kibana /srv/kibana \
     && systemctl enable elasticsearch \
     && systemctl enable kibana \
+    && systemctl enable httpd \
     #&& mkdir -p ${PGDATA} \
     #&& mkdir -p /run/postgresql \
     #&& chown -R postgres ${PGDATA} \
@@ -48,3 +51,4 @@ ADD kibana.yml /srv/kibana/config/kibana.yml
 #EXPOSE 5432
 EXPOSE 80 443
 #VOLUME ["/var/lib/pgsql/${PG_MAJOR}/data", "/srv/backup"]
+VOLUME ["/etc/httpd/sites-enabled.d", "/usr/share/elasticsearch/data"]
