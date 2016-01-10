@@ -1,15 +1,15 @@
 FROM feduxorg/centos
 MAINTAINER dev@fedux.org
 
-ENV PG_MAJOR 9.4
-ENV PGDATA /var/lib/pgsql/${PG_MAJOR}/data
+#ENV PG_MAJOR 9.4
+#ENV PGDATA /var/lib/pgsql/${PG_MAJOR}/data
 
 RUN mkdir -p ${PGDATA} \
-    && groupadd -r -g 990 postgres && useradd -r -g postgres -u 990 postgres \
-    && chown -R postgres:postgres ${PGDATA}
+    && groupadd -r -g 990 elk && useradd -r -g elk -u 990 elk \
+    && chown -R elk:elk ${PGDATA}
 
-USER postgres
+USER elk
 
-VOLUME [${PGDATA}]
+#VOLUME [${PGDATA}]
 
 CMD ["true"]

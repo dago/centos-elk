@@ -3,8 +3,8 @@ require 'pathname'
 task default: 'docker:build'
 
 namespace :docker do
-  image_name = 'feduxorg/centos-postgresql'
-  container_name = 'centos-postgresql1'
+  image_name = 'feduxorg/centos-elk'
+  container_name = 'centos-elk-1'
 
   desc 'Build docker image'
   task :build, :nocache do |_, args|

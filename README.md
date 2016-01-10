@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # centos-ruby
 
 ## Overview
@@ -68,3 +69,19 @@ docker run -ti --rm --name "centos-postgres1" -v /sys/fs/cgroup:/sys/fs/cgroup:r
 * `pg-backup-cleanup`: Cleanup old backups daily
 * `pg-init`: Run once on very early startup
 * `postgresql-<x.x>`: Database server
+=======
+# centos-elk
+
+~~~
+docker run \
+  -it \
+  --name centos-elk-1 \
+  --rm \
+  -v /etc/machines/<machine>/ssl/httpd:/etc/ssl/httpd/ \
+  -v /etc/machines/<machine>/httpd-config/sites-enabled:/etc/httpd/sites-enabled.d \
+  -v /etc/machines/<machine>/elasticsearch-config/:/etc/elasticsearch/config/ \
+  -v /etc/machines/<machine>/kibana-config/:/etc/kibana/config/ \
+  centos-elk
+~~~
+
+>>>>>>> 960860523498a1e4c5d4d41832349b14ccc8f59e
