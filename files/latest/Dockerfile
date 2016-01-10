@@ -16,12 +16,13 @@ RUN groupadd -g 990 -r elasticsearch \
     && groupadd -g 993 -r httpd \
     && useradd -r -g httpd -u 993 httpd \
     && rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch \
-    && yum install -y elasticsearch logstash httpd
+    && yum install -y elasticsearch logstash httpd java-1.8.0-openjdk
 
 RUN install -d -o kibana -g kibana -m 0755 /srv/kibana \
     && install -d -o kibana -g kibana -m 0755 /var/log/kibana \
     && install -d -o httpd -g httpd -m 0755 /etc/httpd/sites-enabled.d \
-    && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux-x64.tar.gz | tar -xzf - -C /srv/kibana \
+    && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux-x64.tar.gz | tar --strip-components=1 -xzf - -C /srv/kibana \
+    && chown -R kibana:kibana /srv/kibana \
     && systemctl enable elasticsearch \
     && systemctl enable kibana \
     #&& mkdir -p ${PGDATA} \
@@ -30,6 +31,8 @@ RUN install -d -o kibana -g kibana -m 0755 /srv/kibana \
     #&& chmod g+s /run/postgresql \
     #&& chown -R postgres:postgres /run/postgresql \
     && yum clean -y all
+
+ADD kibana.yml /srv/kibana/config/kibana.yml
 
 ## Add cleanup backup service
 #ADD e-cleanup.service /etc/systemd/system/e-cleanup.service
