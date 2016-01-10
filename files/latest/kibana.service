@@ -8,3 +8,6 @@ User=kibana
 Group=kibana
 ExecStart=/srv/kibana/bin/kibana
 WorkingDirectory=/srv/kibana
+
+[Install]
+WantedBy=multi-user.target

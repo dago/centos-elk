@@ -16,11 +16,12 @@ RUN groupadd -g 990 -r elasticsearch \
     && groupadd -g 993 -r httpd \
     && useradd -r -g httpd -u 993 httpd \
     && rpm --import https://packages.elastic.co/GPG-KEY-elasticsearch \
-    && yum install -y elasticsearch logstash httpd \
-    && install -D -o kibana -g kibana -m 0755 /srv/kibana \
-    && install -D -o kibana -g kibana -m 0755 /var/log/kibana \
-    && install -D -o httpd -g httpd -m 0755 /etc/httpd/sites-enabled.d \
-    && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux-x64.tar.gz | tar -xzf - -D /srv/kibana \
+    && yum install -y elasticsearch logstash httpd
+
+RUN install -d -o kibana -g kibana -m 0755 /srv/kibana \
+    && install -d -o kibana -g kibana -m 0755 /var/log/kibana \
+    && install -d -o httpd -g httpd -m 0755 /etc/httpd/sites-enabled.d \
+    && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux-x64.tar.gz | tar -xzf - -C /srv/kibana \
     && systemctl enable elasticsearch \
     && systemctl enable kibana \
     #&& mkdir -p ${PGDATA} \
