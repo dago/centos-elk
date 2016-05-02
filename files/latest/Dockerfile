@@ -34,6 +34,7 @@ RUN && curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-li
     && systemctl enable elasticsearch \
     && systemctl enable kibana \
     && systemctl enable httpd \
+    && sed -ie "s/network.host: .*/network.host: localhost/ /etc/elasticsearch/elasticsearch.yml" \
     #&& mkdir -p ${PGDATA} \
     #&& mkdir -p /run/postgresql \
     #&& chown -R postgres ${PGDATA} \
