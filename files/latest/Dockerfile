@@ -39,18 +39,6 @@ RUN curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux
 
 ADD kibana.yml /srv/kibana/config/kibana.yml
 
-## Add cleanup backup service
-#ADD e-cleanup.service /etc/systemd/system/e-cleanup.service
-#ADD e-cleanup.timer /etc/systemd/system/e-cleanup.timer
-#ADD e-cleanup.sh /usr/local/bin/e-cleanup.sh
-#
-#RUN  chmod +x /usr/local/bin/e-cleanup.sh \
-#  && systemctl enable e-cleanup.timer
-
-#ADD profile.d-environment.sh /etc/profile.d/99-environment.sh
-#ADD environment.db /etc/pg/environment.db
-
-#EXPOSE 5432
 EXPOSE 80 443
-#VOLUME ["/var/lib/pgsql/${PG_MAJOR}/data", "/srv/backup"]
-VOLUME ["/etc/httpd/sites-enabled.d", "/usr/share/elasticsearch/data"]
+
+VOLUME ["/etc/httpd/sites-enabled.d", "/usr/share/elasticsearch/data", "/usr/share/elasticsearch/logs"]
