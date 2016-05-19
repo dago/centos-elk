@@ -34,12 +34,7 @@ RUN curl -L https://download.elastic.co/kibana/kibana/kibana-${KB_VERSION}-linux
     && systemctl enable elasticsearch \
     && systemctl enable kibana \
     && systemctl enable httpd \
-    && sed -ie "s/network.host: .*/network.host: localhost/ /etc/elasticsearch/elasticsearch.yml" \
-    #&& mkdir -p ${PGDATA} \
-    #&& mkdir -p /run/postgresql \
-    #&& chown -R postgres ${PGDATA} \
-    #&& chmod g+s /run/postgresql \
-    #&& chown -R postgres:postgres /run/postgresql \
+    && sed -i -e "s#network\.host: .*#network.host: localhost#" /etc/elasticsearch/elasticsearch.yml \
     && yum clean -y all
 
 ADD kibana.yml /srv/kibana/config/kibana.yml
