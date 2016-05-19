@@ -8,7 +8,7 @@ RUN groupadd -g 990 -r elasticsearch \
     && groupadd -g 992 -r logstash \
     && useradd -r -g logstash -u 992 logstash \
     && groupadd -g 993 -r httpd \
-    && useradd -r -g httpd -u 993 httpd \
+    && useradd -r -g httpd -u 993 httpd
 
 RUN install -d -o kibana -g kibana -m 0755 /srv/kibana \
     && install -d -o kibana -g kibana -m 0755 /var/log/kibana \
