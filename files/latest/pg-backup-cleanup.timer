@@ -1,9 +1,0 @@
-[Unit]
-Description=Cleanup backups of databases daily
-
-[Timer]
-# Persistent=true
-OnCalendar=daily
-
-[Install]
-WantedBy=timers.target
